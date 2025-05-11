@@ -1,20 +1,65 @@
+/* client/src/pages/Home/Home.css - AJUSTADO PARA RESPONSIVE (LogoSearch z-index) */
+
 .HomeContainer {
     display: flex;
     flex-direction: column;
-    gap: 1rem; 
+    gap: 1rem;
     padding: 1rem;
-  }
-  
-  .Home {
+    /* Permite scroll si el contenido total excede la altura de la ventana */
+    /* overflow-y: auto; */ /* Opcional: Considera añadir scroll aquí si todo se sale de la pantalla */
+}
+
+.Home {
     position: relative;
     display: grid;
     grid-template-columns: 18rem auto 20rem;
     gap: 1rem;
-  }
-  
-  @media (max-width: 768px) {
+}
+
+/* --- Media Query para pantallas pequeñas --- */
+@media (max-width: 768px) {
     .Home {
-      grid-template-columns: 1fr;
+        /* Cambiar el layout principal a una sola columna apilada */
+        grid-template-columns: 1fr;
+        /* Asegura que los paneles hijos (.ProfileSide, .PostSide, .RightSide)
+           ocupan todo el ancho y se apilan verticalmente con el gap definido */
+        gap: 0.5rem; /* Puedes ajustar el gap si es necesario */
     }
-  }
-  
+
+    /* --- AJUSTE PARA LogoSearch EN MÓVIL --- */
+    /* El LogoSearch está FUERA del grid .Home en Home.js */
+    /* Necesitamos asegurarnos de que ocupa el ancho completo y está por encima de otros elementos */
+    .HomeContainer .LogoSearch {
+        position: relative; /* Necesario para que z-index funcione */
+        z-index: 10; /* Un número alto para asegurar que esté por encima */
+        width: 100%; /* Ocupa todo el ancho disponible */
+        box-sizing: border-box; /* Incluir padding en el ancho */
+        /* padding: 0 0.5rem; */ /* Añade padding lateral si el padding del .HomeContainer no es suficiente */
+        /* Opcional: Ajustar márgenes si está demasiado pegado */
+        /* margin-bottom: 0.5rem; */
+    }
+
+    /* Asegura que los paneles del grid ocupan todo el ancho en móvil */
+    /* Esto ya debería ocurrir con grid-template-columns: 1fr; pero una doble verificación no hace daño */
+    .Home .ProfileSide,
+    .Home .PostSide,
+    .Home .RightSide {
+        width: 100%;
+        /* Asegúrate de que estos componentes no tienen un ancho fijo que los haga desbordar */
+        /* Si tienen width: auto; o width: 100%; en sus propios CSS, debería estar bien */
+    }
+
+    /* Opcional: Ajustar estilos específicos dentro de los paneles si se ven mal */
+    /* Por ejemplo, si el RightSide tiene elementos que se salen: */
+    /*
+    .RightSide {
+        overflow-x: hidden; // Ocultar contenido que desborde horizontalmente
+    }
+    */
+
+}
+
+/* --- Puedes añadir más media queries para tablets si quieres --- */
+/* @media (max-width: 1024px) and (min-width: 769px) {
+    /* Ajustes para tablets si son diferentes a escritorio y móvil */
+/* } */
