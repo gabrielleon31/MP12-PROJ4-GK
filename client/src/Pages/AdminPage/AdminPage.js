@@ -17,261 +17,234 @@ import PostDetailsModal from '../../Components/PostDetailsModal/PostDetailsModal
 
 
 const AdminPage = () => {
+    // 1. Obtener datos del usuario logueado (puede ir antes o después de Hooks, pero antes del return condicional)
     const { user } = useSelector(state => state.authReducer.authData) || {};
 
+    // 2. DECLARACIÓN DE TODOS LOS HOOKS (useState, useEffect, etc.) - DEBEN IR AQUÍ, AL PRINCIPIO
     // --- Estados locales para los datos de administración ---
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    // --- Fin Estados locales ---
+    const [loading, setLoading] = useState(true); // Estado para la carga inicial de datos
+    const [error, setError] = useState(null); // Estado para errores al cargar datos
 
-    // --- Estados para controlar los modales de detalles (mantienen el código existente) ---
+    // --- Estados para controlar los modales de detalles (Estos también son Hooks y deben ir aquí) ---
     const [userDetailsModalOpened, setUserDetailsModalOpened] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-
     const [postDetailsModalOpened, setPostDetailsModalOpened] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
-    // --- Fin Estados para modales de detalles ---
+    // --- Fin Estados para controlar los modales de detalles ---
 
-    // --- YA NO NECESITAMOS Estados para controlar los modales de EDICIÓN ---
-    // const [editUserModalOpened, setEditUserModalOpened] = useState(false);
-    // const [userToEdit, setUserToEdit] = useState(null);
-    // const [editPostModalOpened, setEditPostModalOpened] = useState(false);
-    // const [postToEdit, setPostToEdit] = useState(null);
-    // --- Fin NO NECESITAMOS Estados para modales de EDICIÓN ---
-
-
-    console.log("AdminPage component rendered. Checking user admin status:", user?.isAdmin);
-    // console.log("AdminPage Render: Current states:", { users, posts, loading, error, userDetailsModalOpened, postDetailsModalOpened /* REMOVIDO edit states */ });
+    // --- Estados para manejar el proceso de eliminación (También Hooks) ---
+    const [deletingUserId, setDeletingUserId] = useState(null); // ID del usuario que se está eliminando
+    const [deletingPostId, setDeletingPostId] = useState(null); // ID del post que se está eliminando
+    const [deleteError, setDeleteError] = useState(null); // Estado para errores de eliminación
+    // --- Fin Estados para manejar el proceso de eliminación ---
 
 
-    if (!user || !user.isAdmin) {
-        console.warn("AdminPage: User is not admin or not logged in. Redirecting.");
-        return <Navigate to="/home" replace />;
-    }
-
-    // --- useEffect para cargar los datos al montar el componente (mantiene el código existente) ---
+    // --- useEffect para CARGAR los datos de administración (Usuarios y Posts) ---
+    // Este useEffect se ejecutará solo una vez al montar el componente (si user no está en dependencias)
+    // o cuando 'user' cambie (si lo añades a dependencias, lo cual podría ser relevante si el login ocurre después de montar el componente)
+    // La llamada a la API DENTRO del useEffect puede tener lógica condicional.
     useEffect(() => {
-        console.log("AdminPage useEffect: Effect triggered.");
-        const fetchData = async () => {
-            console.log("fetchData function START.");
-            setLoading(true);
-            setError(null);
+        console.log("AdminPage useEffect: Attempting to fetch admin data...");
+        // Verifica si el usuario es admin y está logueado antes de intentar fetchear
+        // Esta verificación es DENTRO del useEffect, no alrededor de la llamada a useEffect.
+        if (user && user.isAdmin) {
+             console.log("AdminPage useEffect: User is admin, fetching data...");
+            const fetchData = async () => {
+                setLoading(true); // Iniciar carga
+                setError(null); // Limpiar errores anteriores
+                try {
+                    // Fetch de usuarios y posts en paralelo
+                    const [usersResponse, postsResponse] = await Promise.all([
+                        getAllUsersAdmin(),
+                        getAllPostsAdmin(),
+                    ]);
 
-            try {
-                console.log("fetchData: Entering try block.");
-                // Fetch users
-                console.log("fetchData: Attempting to fetch users...");
-                const usersResponse = await getAllUsersAdmin();
-                console.log("fetchData: Received users response:", usersResponse.data);
-                if (Array.isArray(usersResponse.data)) {
-                     console.log("fetchData: Users data is an array. Setting users state.");
-                     setUsers(usersResponse.data);
-                } else {
-                     console.error("fetchData: ERROR - Received unexpected data format for users.");
-                     throw new Error("Received unexpected user data format from API");
+                    // Actualizar estados con los datos recibidos
+                    setUsers(usersResponse.data);
+                    setPosts(postsResponse.data);
+
+                    setLoading(false); // Finalizar carga
+                    console.log("AdminPage: Fetched admin data successfully.");
+
+                } catch (err) {
+                    console.error("AdminPage useEffect: Error fetching admin data:", err);
+                    setError(err); // Guardar error
+                    setLoading(false); // Finalizar carga incluso con error
                 }
+            };
 
-                // Fetch posts
-                console.log("fetchData: Attempting to fetch posts...");
-                const postsResponse = await getAllPostsAdmin();
-                console.log("fetchData: Received posts data:", postsResponse.data);
-                 if (Array.isArray(postsResponse.data)) {
-                     console.log("fetchData: Posts data is an array. Setting posts state.");
-                     setPosts(postsResponse.data);
-                 } else {
-                      console.error("fetchData: ERROR - Received unexpected data format for posts.");
-                      throw new Error("Received unexpected post data format from API");
-                 }
+            fetchData(); // Llama a la función de fetching
 
-                console.log("fetchData: try block completing successfully.");
-                setLoading(false);
-
-            } catch (err) {
-                console.error("fetchData: !!! CATCH BLOCK ENTERED !!! Error fetching admin data:", err);
-                setError("Error loading data.");
-                setLoading(false);
-            }
-             console.log("fetchData function OUTSIDE try/catch.");
-        };
-        console.log("AdminPage useEffect: Calling fetchData().");
-        fetchData();
-    }, [user]);
-
-
-    // --- Funciones para manejar la eliminación (mantienen el código existente) ---
-    const handleDeleteUser = async (userId) => {
-        console.log(`handleDeleteUser: Attempting to delete user with ID: ${userId}`);
-        // Opcional: Mostrar un cuadro de confirmación al usuario antes de eliminar
-        if (window.confirm(`Are you sure you want to delete user ${userId}?`)) {
-            try {
-                await deleteUserAdmin(userId); // Llama a la función API de eliminación
-                console.log(`handleDeleteUser: User ${userId} deleted successfully.`);
-                // Actualizar la lista de usuarios en el frontend sin recargar la página
-                setUsers(users.filter(user => user._id !== userId));
-                console.log("handleDeleteUser: Frontend users list updated.");
-                 // Opcional: Mostrar un mensaje de éxito al usuario (toast/snackbar)
-            } catch (error) {
-                console.error(`handleDeleteUser: Error deleting user ${userId}:`, error);
-                 // Opcional: Mostrar un mensaje de error al usuario
-                 alert(`Error deleting user: ${error.response?.data?.message || error.message || error}`); // Ejemplo básico de alerta
-            }
         } else {
-            console.log("handleDeleteUser: User deletion cancelled.");
+             // Si el useEffect se ejecuta pero el usuario no es admin (y el Navigate no lo redirigió por alguna razón)
+             console.log("AdminPage useEffect: User is not admin. Not fetching admin data.");
+             setLoading(false); // Asegurarse de que el estado de carga se desactiva
+             // setError("You must be an administrator to view this page."); // Opcional: establecer un mensaje de error de permisos
+        }
+
+        // Dependencias: React recomienda añadir 'user' si lo usas dentro del useEffect.
+        // 'dispatch' (si lo usas) también iría aquí. Las funciones de API importadas (getAllUsersAdmin, etc.) generalmente no son dependencias si son estables.
+    }, [user]); // Añadimos 'user' como dependencia
+
+
+    // --- Redirección condicional (DEBE IR DESPUÉS DE TODAS LAS DECLARACIONES DE HOOKS) ---
+    // Si el usuario NO existe O no es admin, redirige INMEDIATAMENTE.
+    // Esto asegura que los Hooks se declaran (aunque no se ejecute la lógica de fetching dentro del useEffect si user.isAdmin es false),
+    // pero el componente deja de renderizar el contenido del panel de admin si no tiene permisos.
+    if (!user || !user.isAdmin) {
+        console.log("AdminPage: User is not admin or not logged in. Redirecting.");
+        return <Navigate to="/home" />; // Onde quieras redirigir si no es admin
+    }
+     // Si llegamos aquí, el usuario está logueado Y es admin. Continúa con el renderizado del panel.
+    // --- Fin Redirección ---
+
+
+    // --- Handlers para abrir modales de detalles ---
+    const handleViewUserDetails = (userData) => {
+        setSelectedUser(userData);
+        setUserDetailsModalOpened(true);
+    };
+
+     const handleViewPostDetails = (postData) => {
+        setSelectedPost(postData);
+        setPostDetailsModalOpened(true);
+     };
+
+    // --- Handlers para eliminar ---
+    const handleDeleteUser = async (userId) => {
+        setDeletingUserId(userId); // Indica qué usuario se está eliminando
+        setDeleteError(null); // Limpia errores de eliminación anteriores
+        try {
+            console.log(`AdminPage: Attempting to delete user with ID: ${userId}`);
+            await deleteUserAdmin(userId);
+            console.log(`AdminPage: User ${userId} deleted successfully.`);
+            // Actualiza la lista de usuarios en el estado eliminando al usuario
+            setUsers(users.filter(user => user._id !== userId));
+            setDeletingUserId(null); // Reset el estado de eliminación
+        } catch (err) {
+            console.error(`AdminPage: Error deleting user with ID ${userId}:`, err);
+            setDeleteError(`Error deleting user ${userId}.`); // Guarda el error
+            setDeletingUserId(null); // Reset el estado de eliminación
         }
     };
 
     const handleDeletePost = async (postId) => {
-        console.log(`handleDeletePost: Attempting to delete post with ID: ${postId}`);
-         // Opcional: Mostrar un cuadro de confirmación
-        if (window.confirm(`Are you sure you want to delete post ${postId}?`)) {
-            try {
-                await deletePostAdmin(postId); // Llama a la función API de eliminación
-                console.log(`handleDeletePost: Post ${postId} deleted successfully.`);
-                 // Actualizar la lista de posts en el frontend
-                setPosts(posts.filter(post => post._id !== postId));
-                console.log("handleDeletePost: Frontend posts list updated.");
-                 // Opcional: Mostrar un mensaje de éxito
-            } catch (error) {
-                console.error(`handleDeletePost: Error deleting post ${postId}:`, error);
-                 // Opcional: Mostrar un mensaje de error
-                 alert(`Error deleting post: ${error.response?.data?.message || error.message || error}`); // Ejemplo básico de alerta
-            }
-        } else {
-            console.log("handleDeletePost: Post deletion cancelled.");
-        }
+        setDeletingPostId(postId); // Indica qué post se está eliminando
+        setDeleteError(null); // Limpia errores de eliminación anteriores
+         try {
+            console.log(`AdminPage: Attempting to delete post with ID: ${postId}`);
+            await deletePostAdmin(postId);
+            console.log(`AdminPage: Post ${postId} deleted successfully.`);
+            // Actualiza la lista de posts en el estado eliminando el post
+            setPosts(posts.filter(post => post._id !== postId));
+            setDeletingPostId(null); // Reset el estado de eliminación
+         } catch (err) {
+            console.error(`AdminPage: Error deleting post with ID ${postId}:`, err);
+            setDeleteError(`Error deleting post ${postId}.`); // Guarda el error
+            setDeletingPostId(null); // Reset el estado de eliminación
+         }
     };
 
-    // --- Fin Funciones para manejar la eliminación ---
 
-    // --- Funciones para manejar la apertura/cierre de modales de detalles (mantiene el código existente) ---
-
-    const openUserDetailsModal = (user) => {
-        console.log("openUserDetailsModal: User selected for details:", user);
-        setSelectedUser(user); // Guarda el usuario seleccionado en el estado
-        setUserDetailsModalOpened(true); // Abre el modal
-    };
-
-    const closeUserDetailsModal = () => {
-        console.log("closeUserDetailsModal: Closing user details modal.");
-        setUserDetailsModalOpened(false); // Cierra el modal
-        setSelectedUser(null); // Limpia el usuario seleccionado al cerrar
-    };
-
-    const openPostDetailsModal = (post) => {
-        console.log("openPostDetailsModal: Post selected for details:", post);
-        setSelectedPost(post); // Guarda el post seleccionado en el estado
-        setPostDetailsModalOpened(true); // Abre el modal
-    };
-
-    const closePostDetailsModal = () => {
-        console.log("closePostDetailsModal: Closing post details modal.");
-        setPostDetailsModalOpened(false); // Cierra el modal
-        setSelectedPost(null); // Limpia el post seleccionado al cerrar
-    };
-
-    // --- Fin Funciones manejo modales de detalles ---
-
-    // --- YA NO NECESITAMOS Funciones para manejar la apertura/cierre de modales de EDICIÓN ---
-    // const openEditUserModal = (user) => { ... };
-    // const closeEditUserModal = () => { ... };
-    // const handleUserUpdated = (updatedUser) => { ... };
-    // const openEditPostModal = (post) => { ... };
-    // const closeEditPostModal = () => { ... };
-    // const handlePostUpdated = (updatedPost) => { ... };
-    // --- Fin NO NECESITAMOS Funciones manejo modales de EDICIÓN ---
-
-
-    // --- Lógica de Renderizado basada en los estados ---
-    console.log("AdminPage Render: Rendering based on states.", { usersLength: users.length, postsLength: posts.length, loading, error });
-
-    if (loading) {
-        return (
-            <div className='AdminPage'>
-                <h4>Admin Users</h4>
-                <p>Loading Users...</p>
-                <h4>Admin Posts</h4>
-                <p>Loading Posts...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-             <div className='AdminPage'>
-                <h4>Admin Users</h4>
-                 <p>{error}</p>
-                <h4>Admin Posts</h4>
-                 <p>{error}</p>
-             </div>
-        );
-    }
-
+    // --- Renderizado (JSX) ---
     return (
-        <div className='AdminPage'>
+        <div className="AdminPage">
             <h3>Admin Panel</h3>
 
+            {/* Mensaje de carga o error general */}
+            {loading && <p>Loading admin data...</p>}
+            {error && <p style={{ color: 'red' }}>Error loading data: {error.message || 'Unknown error'}</p>}
+
             {/* Sección de Usuarios */}
-            <h4>Admin Users ({users.length})</h4>
-            {Array.isArray(users) && users.length > 0 ? (
-                <div className="user-list">
-                    {users.map(u => (
-                        // --- Añadir onClick al item para abrir modal de detalles de usuario ---
-                        // Al hacer clic, llamamos a openUserDetailsModal con el objeto de usuario 'u'
-                        // Añadir cursor: pointer para indicar que es clickable
-                        <div key={u._id} className="admin-item" onClick={() => openUserDetailsModal(u)} style={{ cursor: 'pointer' }}>
-                            {/* Muestra información básica del usuario */}
-                            <span><strong>User ID:</strong> {u._id}</span>
-                            <span><strong>Name:</strong> {u.firstname} {u.lastname}</span>
-                            <span><strong>Email:</strong> {u.email}</span>
-                             {/* Puedes añadir más campos aquí */}
-                             {/* <span><strong>isAdmin:</strong> {u.isAdmin ? 'Yes' : 'No'}</span> */}
+            <h4>Users</h4>
+            {!loading && !error && users.length > 0 ? ( // Mostrar solo si no carga/error y hay usuarios
+                <div>
+                    {users.map(userData => (
+                        <div key={userData._id} className="admin-item">
+                             <span><strong>ID:</strong> {userData._id}</span>
+                             <span><strong>Name:</strong> {userData.firstname} {userData.lastname}</span>
+                             <span><strong>Email:</strong> {userData.email}</span>
+                             <span><strong>Is Admin:</strong> {userData.isAdmin ? 'Yes' : 'No'}</span>
+                             {/* Mostrar otros detalles si es relevante para el admin */}
+                             {/* <span><strong>Followers:</strong> {Array.isArray(userData.followers) ? userData.followers.length : 0}</span> */}
+                             {/* <span><strong>Following:</strong> {Array.isArray(userData.following) ? userData.following.length : 0}</span> */}
 
-                            {/* *** Contenedor para los botones de acción (Solo Eliminar ahora) *** */}
-                             <div className="admin-item-actions"> {/* Añadir una clase para estilizar */}
-                                {/* --- Botón para eliminar usuario --- */}
-                                {/* Usamos onClick={(e) => { e.stopPropagation(); handleDeleteUser(u._id); }} para evitar que el click propague al item padre */}
-                                 <button className="button small-button delete-button" onClick={(e) => { e.stopPropagation(); handleDeleteUser(u._id); }}>Delete User</button>
-                             </div>
 
+                            {/* Botones de acción para Usuarios */}
+                            <div className="admin-actions">
+                                {/* Botón de Ver Detalles de Usuario */}
+                                <button
+                                     className='button small-button'
+                                     onClick={() => handleViewUserDetails(userData)}
+                                     disabled={loading || deletingUserId === userData._id || deletingPostId} // Deshabilitar si ya hay una operación en curso
+                                >
+                                    View Details
+                                </button>
+
+                                {/* Botón de Eliminar Usuario */}
+                                {/* Puedes añadir una confirmación antes de eliminar */}
+                                <button
+                                     className='button small-button delete-button'
+                                     onClick={() => { if (window.confirm(`Are you sure you want to delete user ${userData.firstname} ${userData.lastname}?`)) handleDeleteUser(userData._id); }}
+                                     disabled={loading || deletingUserId === userData._id || deletingPostId} // Deshabilitar si ya hay una operación en curso
+                                >
+                                    {deletingUserId === userData._id ? 'Deleting...' : 'Delete User'} {/* Mostrar estado de eliminación */}
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
-            ) : (
+            ) : (!loading && !error && users.length === 0) ? ( // Mostrar si no carga/error y NO hay usuarios
                 <p>No users found.</p>
-            )}
+            ) : null /* No mostrar nada si está cargando o hay error general */ }
+
 
             {/* Sección de Posts */}
-            <h4>Admin Posts ({posts.length})</h4>
-             {Array.isArray(posts) && posts.length > 0 ? (
-                <div className="post-list">
-                    {posts.map(p => (
-                         // --- Añadir onClick al item para abrir modal de detalles de post ---
-                         // Al hacer clic, llamamos a openPostDetailsModal con el objeto de post 'p'
-                         // Añadir cursor: pointer
-                        <div key={p._id} className="admin-item" onClick={() => openPostDetailsModal(p)} style={{ cursor: 'pointer' }}>
-                             {/* Muestra información básica del post */}
-                             {/* El autor (p.userId) está populado */}
-                            <span><strong>Post by:</strong> {p.userId ? `${p.userId.firstname} ${p.userId.lastname}` : 'Unknown User'} (ID: {p.userId?._id})</span>
-                            <span><strong>Post ID:</strong> {p._id}</span>
-                            <span><strong>Description:</strong> {p.desc?.substring(0, 50)}{p.desc?.length > 50 ? '...' : ''}</span>
-                             {p.image && <span><strong>Image:</strong> {p.image}</span>}
-                             <span><strong>Likes:</strong> {Array.isArray(p.likes) ? p.likes.length : 0}</span>
+            <h4>Posts</h4>
+             {!loading && !error && posts.length > 0 ? ( // Mostrar solo si no carga/error y hay posts
+                <div>
+                    {posts.map(postData => (
+                        <div key={postData._id} className="admin-item">
+                             <span><strong>ID:</strong> {postData._id}</span>
+                             {/* Asegurarse de que userId está populado y tiene el nombre */}
+                             <span><strong>Author:</strong> {postData.userId && typeof postData.userId === 'object' ? `${postData.userId.firstname} ${postData.userId.lastname}` : 'Unknown User'}</span>
+                             <span><strong>Description:</strong> {postData.desc ? postData.desc.substring(0, 50) + '...' : 'No description'}</span> {/* Limitar la descripción larga */}
+                             <span><strong>Likes:</strong> {Array.isArray(postData.likes) ? postData.likes.length : 0}</span>
+                             {/* Opcional: Mostrar imagen si existe */}
+                             {/* {postData.image && (
+                                <img src={process.env.REACT_APP_BACKEND_PUBLIC_FOLDER + postData.image} alt="Post Image" style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover', marginTop: '0.5rem' }}/>
+                             )} */}
 
-                            {/* *** Contenedor para los botones de acción (Solo Eliminar ahora) *** */}
-                            <div className="admin-item-actions"> {/* Añadir una clase para estilizar */}
-                                {/* --- Botón para eliminar post --- */}
-                                {/* Usamos onClick={(e) => { e.stopPropagation(); handleDeletePost(p._id); }} para evitar que el click propague al item padre */}
-                                <button className="button small-button delete-button" onClick={(e) => { e.stopPropagation(); handleDeletePost(p._id); }}>Delete Post</button>
+                            {/* Botones de acción para Posts */}
+                            <div className="admin-actions">
+                                {/* Botón de Ver Detalles de Post */}
+                                 <button
+                                     className='button small-button'
+                                     onClick={() => handleViewPostDetails(postData)}
+                                     disabled={loading || deletingUserId || deletingPostId === postData._id} // Deshabilitar si ya hay una operación en curso
+                                >
+                                    View Details
+                                </button>
+
+                                {/* Botón de Eliminar Post */}
+                                {/* Puedes añadir una confirmación antes de eliminar */}
+                                <button
+                                    className='button small-button delete-button'
+                                    onClick={() => { if (window.confirm(`Are you sure you want to delete this post (ID: ${postData._id})?`)) handleDeletePost(postData._id); }}
+                                    disabled={loading || deletingUserId || deletingPostId === postData._id} // Deshabilitar si ya hay una operación en curso
+                                >
+                                     {deletingPostId === postData._id ? 'Deleting...' : 'Delete Post'} {/* Mostrar estado de eliminación */}
+                                </button>
                             </div>
-
                         </div>
                     ))}
                 </div>
-            ) : (
+            ) : (!loading && !error && posts.length === 0) ? ( // Mostrar si no carga/error y NO hay posts
                 <p>No posts found.</p>
-            )}
+            ) : null /* No mostrar nada si está cargando o hay error general */ }
+
 
              {/* Puedes añadir más secciones aquí (ej: Comentarios, Estadísticas) */}
 
