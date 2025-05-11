@@ -1,10 +1,15 @@
+/* client/src/Pages/auth/Auth.css */
+
+/* Estilos generales (para escritorio o por defecto) */
 .Auth{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100vh; /* Ocupa la altura completa de la ventana */
     gap: 4rem;
-    position: relative;  
+    position: relative;
+    padding: 1rem; /* Añadir padding general por si acaso */
+    box-sizing: border-box; /* Incluir padding en el tamaño */
 }
 
 .Auth > div{
@@ -15,16 +20,28 @@
 
 .a-left {
     gap: 2rem;
+    /* Puedes definir un ancho máximo para el lado izquierdo si quieres */
+    max-width: 400px;
 }
 
 .a-left > img{
     width: 4rem;
     height: 4rem;
+    /* Asegurar que la imagen es responsive */
+    max-width: 100%;
+    height: auto;
 }
 
 .Webname > h2 {
     color: rgb(43, 43, 163);
+    font-size: 2rem; /* Tamaño de fuente por defecto */
+    /* word-break: break-word; */ /* Rompe palabras largas */
 }
+.Webname > h6 {
+    font-size: 1rem; /* Tamaño de fuente por defecto */
+    /* word-break: break-word; */
+}
+
 
 .infoForm {
     display: flex;
@@ -32,6 +49,9 @@
     align-items: center;
     justify-content: center;
     gap: 2rem;
+    /* Asegura que el formulario no tiene un ancho fijo que desborde */
+    width: 100%;
+    max-width: 400px; /* Ancho máximo para el formulario */
 }
 
 .infoInput{
@@ -41,49 +61,186 @@
     border-radius: 8px;
     padding: 17px;
     flex: 1;
+    /* Asegura que el input ocupa el ancho disponible y no desborda */
+    width: 100%;
+    box-sizing: border-box; /* Incluye padding en el ancho */
+    font-size: 1rem; /* Tamaño de fuente por defecto */
 }
 
-.infoForm > div{
-    display: flex;  
+/* Contenedor para grupos de inputs (ej: password y confirmación) */
+.infoForm > div {
+    display: flex;
     gap: 1rem;
-    height: 2rem;
-    width: 90%;
+    /* Altura fija de 2rem es problemática. Mejor usar padding o altura automática. */
+    /* height: 2rem; */
+    width: 100%; /* Asegura que el contenedor ocupa todo el ancho */
+    align-items: center;
 }
+
+/* Estilo específico para el grupo de contraseña y confirmación */
+.password-group {
+    display: flex; /* Ya es flexbox */
+    gap: 1rem; /* Espacio entre los inputs de contraseña */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    /* No Height fijo */
+    /* align-items: center; */ /* Alineación vertical si hay inputs de diferente altura */
+}
+
 
 .infoButton{
     width: 6rem;
-    height: 2rem;
-    align-items: center;
+    height: 2rem; /* Altura fija, considera ajustar en móvil */
+    align-self: center; /* O alinear como necesites */
+    /* Asegúrate de que hereda estilos de botón globales si los tienes */
 }
 
 .authForm{
     background-color: var(--cardColor);
     border-radius: 1rem;
     padding: 1rem;
+    /* Asegura que el formulario en sí ocupa el ancho de su contenedor (.Auth > div) */
+    width: 100%; /* Ocupa todo el ancho disponible hasta el max-width de .infoForm */
+    /* Asegúrate de que no tiene un max-width aquí que anule el de .infoForm si es menor */
 }
 
 .authForm > div{
-    width: 100%;
+    width: 100%; /* Asegura que los divs internos ocupan todo el ancho del authForm */
     align-items: center;
+    justify-content: center;
 }
 
-/* Estilos para el span que contiene el texto y el enlace (si necesitas estilos de contenedor) */
+/* Estilos para el span que contiene el texto "Already have an account?" / "Don't have an account?" */
 .authForm .switch-auth {
-    /* margin-top: 1rem; */ /* Ejemplo: añadir espacio encima */
-    /* display: block; */ /* Ejemplo: hacer que ocupe su propia línea */
-    /* text-align: center; */ /* Ejemplo: centrar el texto y el enlace */
+    margin-top: 1rem; /* Espacio encima */
+    text-align: center; /* Centra el texto */
+    font-size: 0.9rem; /* Tamaño de fuente por defecto */
 }
 
-/* *** NUEVOS ESTILOS PARA EL ENLACE (LA PARTE CLICKABLE) *** */
-.authForm .auth-link {
-    color: var(--purplePain); /* O el color de enlace que uses, por ejemplo var(--orange) o var(--darkPurple) */
-    text-decoration: none; /* Quitar el subrayado por defecto de los enlaces */
-    font-weight: bold; /* Opcional: poner en negrita */
-    cursor: pointer; /* Asegurar que el cursor cambie a mano */
-    transition: color 0.2s ease; /* Transición suave al pasar el ratón */
+/* Estilos para el enlace dentro de .switch-auth */
+.authForm .switch-auth span {
+    /* Este es el span clickeable */
+    color: var(--purplePain); /* Color del enlace */
+    cursor: pointer;
+    text-decoration: underline; /* Subrayado por defecto para enlaces */
 }
 
-.authForm .auth-link:hover {
-    color: var(--orange); /* O un color diferente al pasar el ratón */
-    text-decoration: underline; /* Opcional: añadir subrayado al pasar el ratón */
+.authForm .switch-auth span:hover {
+    color: var(--darkPurple); /* Color al pasar el ratón */
 }
+
+
+/* Estilos para mensajes de error (si los usas) */
+.error-msg {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: -1rem; /* Ajusta si interfiere con el gap */
+    text-align: center; /* Centrar mensaje de error */
+    word-break: break-word; /* Rompe palabras largas */
+    width: 100%; /* Asegura que ocupa el ancho para centrar */
+}
+
+
+/* --- Responsive Design para pantallas pequeñas (ej: hasta 768px) --- */
+@media (max-width: 768px) {
+    .Auth {
+        /* Cambiar el layout principal a apilado vertical */
+        flex-direction: column;
+        gap: 1rem; /* Reduce el espacio entre los elementos apilados */
+        height: auto; /* Permite que la altura se ajuste al contenido en pantallas altas */
+        padding: 1rem 0.5rem; /* Ajusta el padding en los laterales */
+        justify-content: flex-start; /* Alinea al inicio verticalmente */
+        overflow-y: auto; /* Habilita scroll si el contenido es más alto que la pantalla */
+    }
+
+    .Auth > div {
+        /* Los contenedores principales de la izquierda y derecha deben ocupar todo el ancho */
+        width: 100%;
+        /* Asegurarse de que no hay justify-content que interfiera si flex-direction es column */
+        justify-content: center; /* Centra horizontalmente en el flujo de columna */
+    }
+
+    .a-left {
+         /* Ajustes específicos para el lado izquierdo (logo y nombre) en móvil */
+         /* Puedes optar por ocultarlo completamente si no quieres que aparezca en móvil */
+         /* display: none; */
+
+         /* O si lo mantienes, ajusta su layout */
+         flex-direction: column; /* Apila logo y nombre */
+         gap: 0.5rem;
+         text-align: center; /* Centra el texto si el ancho es 100% */
+         margin-bottom: 1rem; /* Espacio entre el logo/texto y el formulario */
+         max-width: 100%; /* Ocupa todo el ancho disponible */
+    }
+
+    .Webname > h2 {
+        font-size: 1.5rem; /* Reduce el tamaño de la fuente en móvil */
+    }
+    .Webname > h6 {
+        font-size: 0.8rem; /* Reduce el tamaño de la fuente en móvil */
+    }
+
+
+    .authForm {
+        /* Ajustes específicos para el formulario en móvil */
+        width: 100%; /* Ocupa todo el ancho disponible en el padre */
+        padding: 1rem 0.8rem; /* Ajusta el padding interno */
+         max-width: none; /* Eliminar el max-width si quieres que ocupe todo el ancho */
+    }
+
+    .infoForm {
+         /* Ajusta el gap dentro del formulario */
+         gap: 1rem;
+         width: 100%; /* Asegura que ocupe todo el ancho del authForm */
+    }
+
+    .infoForm > div {
+         /* Ajusta los contenedores de inputs */
+         flex-direction: column; /* Apila los inputs si tienes más de uno por fila */
+         gap: 0.5rem; /* Espacio entre inputs apilados */
+         height: auto; /* Permite que la altura se ajuste al input */
+         width: 100%; /* Asegura que el contenedor ocupe el 100% dentro del infoForm */
+    }
+
+     .infoInput {
+         /* Asegura que los inputs ocupan todo el ancho de su contenedor padre (el div) */
+         width: 100%;
+         /* box-sizing: border-box; /* Ya está definido arriba */
+         padding: 12px; /* Ajusta el padding si es necesario */
+         font-size: 0.9rem; /* Ajusta el tamaño de fuente del input */
+     }
+
+     /* Ajustes para el grupo de contraseña/confirmación */
+     .password-group {
+         flex-direction: column; /* Asegura que se apilen en móvil */
+         gap: 0.5rem; /* Espacio entre contraseña y confirmar */
+         width: 100%; /* Ocupa todo el ancho */
+     }
+
+
+    .infoButton {
+         /* Ajusta el botón de Login/SignUp */
+         width: 100%; /* Haz que el botón ocupe todo el ancho */
+         height: auto; /* Permite que la altura se ajuste al padding/contenido */
+         padding: 0.75rem 1rem; /* Ajusta el padding si es necesario */
+         font-size: 1rem; /* Ajusta el tamaño de fuente del botón */
+    }
+
+     .error-msg {
+         margin-top: 0.5rem; /* Ajusta el margen si es necesario */
+     }
+     .switch-auth {
+        font-size: 0.8rem; /* Ajusta el tamaño de fuente del texto de switch */
+        margin-top: 0.5rem; /* Ajusta el margen si es necesario */
+     }
+     .switch-auth span {
+          /* Ajusta el tamaño de fuente del enlace clickeable si es necesario */
+          /* font-size: 0.8rem; */
+     }
+
+
+}
+
+/* --- Puedes añadir más media queries para tablets si quieres --- */
+/* @media (max-width: 1024px) and (min-width: 769px) {
+    /* Ajustes para tablets si son diferentes a escritorio y móvil */
+/* } */
