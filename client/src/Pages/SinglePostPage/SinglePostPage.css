@@ -1,4 +1,4 @@
-/* client/src/Pages/SinglePostPage/SinglePostPage.css */
+/* client/src/Pages/SinglePostPage/SinglePostPage.css - AJUSTE FINAL DE ESTILO BOTÓN GO BACK */
 
 /* Estilos para el contenedor principal de la página SinglePostPage */
 .SinglePostPage {
@@ -9,10 +9,8 @@
     /* Asegura que la página ocupa al menos la altura visible si el contenido es corto */
     min-height: calc(100vh - 2rem); /* 100vh menos el padding top/bottom */
     box-sizing: border-box; /* Incluye padding en el tamaño */
-    /* Puedes añadir un fondo si es necesario */
-    /* background-color: #f3f3f3; */
-    /* Permite scroll si el contenido total excede la altura */
-    overflow-y: auto;
+    overflow-y: auto; /* Permite scroll si el contenido total excede la altura */
+    background-color: #f3f3f3; /* Asegurar un color de fondo para la página */
 }
 
 /* Estilos para el contenedor del post principal y comentarios */
@@ -23,8 +21,8 @@
     border-radius: 1rem;
     padding: 1rem; /* Espacio interno */
     box-sizing: border-box; /* Incluye padding en el ancho */
-    /* Ajustar márgenes si está muy pegado a otros elementos */
     margin-top: 1rem; /* Espacio encima del contenido del post */
+    box-shadow: var(--profileShadow); /* Añadir sombra para que destaque */
 }
 
 
@@ -32,60 +30,61 @@
 .go-back-button {
     /* Estilos base para el botón */
     margin-bottom: 1rem; /* Espacio debajo del botón */
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem; /* Aumentar un poco el padding para que sea más grande */
     cursor: pointer;
-    /* Puedes usar las clases globales de botón si tienes, por ejemplo si tienes un .button general en App.css */
-    /* Si no, define aquí estilos básicos de botón: */
-    background-color: var(--buttonBg); /* Usa tu variable de color de botón */
-    color: white;
-    border: none;
+    font-size: 1rem; /* Tamaño de fuente */
+    transition: opacity 0.2s ease, transform 0.1s ease;
+
+    /* Asegurar visibilidad y tamaño */
+    display: inline-block; /* Asegura que ocupa el espacio basado en padding/contenido */
+    min-width: 6rem; /* Ancho mínimo para que no desaparezca */
+    text-align: center; /* Centra el texto dentro del botón */
+
+    /* Estilos de color (duplicar aquí por si las variables no cargan, aunque debería cargarlas App.css) */
+    background-color: #6674cc; /* Color de fondo (ej: var(--darkPurple) o el degradado) */
+    color: white; /* Color del texto */
+    border: none; /* Eliminar borde por defecto */
     border-radius: 0.5rem; /* Bordes redondeados */
-    font-size: 1rem;
-    transition: opacity 0.2s ease;
 
      /* Posicionamiento para asegurar que esté clickeable y por encima */
-     /* Asegúrate de que el contenedor .SinglePostPage no es position: static (por defecto) */
-    position: relative; /* Necesario para que z-index funcione en algunos casos */
-    z-index: 10; /* Un número alto para asegurar que esté por encima de otros elementos */
+    position: relative; /* Necesario para que z-index funcione */
+    z-index: 20; /* Aumentar Z-index para mayor prioridad */
 }
 
 /* Efecto hover para el botón */
 .go-back-button:hover {
     opacity: 0.9;
+    /* Puedes añadir otros efectos hover si quieres */
+    /* transform: translateY(-1px); */
 }
 
 
-/* --- Media Query para pantallas pequeñas (ej: hasta 768px) --- */
+/* --- Media Query para pantallas pequeñas --- */
 @media (max-width: 768px) {
      /* Ajustes para el contenedor principal */
      .SinglePostPage {
          padding: 1rem 0.5rem; /* Reduce padding lateral en móvil */
-         /*min-height: auto; /* Permite que la altura sea automática si el contenido es menor que la pantalla */
      }
 
      /* Ajustes para el contenedor del post */
      .SinglePostPage-Content {
          padding: 0.8rem; /* Reduce padding interno en móvil */
-         /* Si quieres que ocupe casi todo el ancho en móvil: */
-         max-width: 100%; /* Elimina el límite de ancho */
-         width: 100%; /* Asegura que ocupe todo el ancho disponible */
+         max-width: 100%; /* Permite que ocupe todo el ancho disponible */
      }
 
      /* Ajustes específicos para el botón "Go Back" en móvil */
      .go-back-button {
-         margin-bottom: 0.8rem; /* Reduce margen inferior en móvil */
-         /* Opcional: Haz que el botón ocupe todo el ancho */
-         /* width: 100%; */
-         /* text-align: center; */ /* Centra el texto si width: 100% */
-         /* Puedes ajustar el padding en móvil si es necesario */
-         /* padding: 0.4rem 0.8rem; */
+         margin-bottom: 0.8rem; /* Reduce margen inferior */
+         padding: 0.6rem 1.2rem; /* Ajusta padding para móvil */
+         font-size: 0.9rem; /* Ajusta tamaño de fuente para móvil */
+         /* width: 100%; */ /* Opcional: Haz que el botón ocupe todo el ancho en móvil */
      }
 
-     /* Si hay otros elementos en la página que puedan superponerse, ajústalos aquí con z-index */
-     /* Por ejemplo, si tienes un RightSide que se apila y cubre: */
+     /* Si hay otros elementos que puedan superponerse, ajústalos aquí con un z-index menor que el botón */
+     /* Por ejemplo, si el RightSide (aunque no debería estar en esta página) lo cubriera: */
      /*
-     .SinglePostPage .RightSide {
-         z-index: 5; // Asegura que es menor que el botón
+     .RightSide {
+         z-index: 5;
      }
      */
 
