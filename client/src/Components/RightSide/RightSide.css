@@ -1,0 +1,193 @@
+/* Este es el archivo client/src/Components/RightSide/RightSide.css - AJUSTE FINAL DE ESTILO V3 */
+
+.RightSide {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative; /* Necesario para que el dropdown absoluto se posicione respecto a él */
+    z-index: 1;
+}
+
+.navIcons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navIcons > img {
+    width: 1.5rem; /* 24px */
+    height: 1.5rem; /* 24px */
+}
+
+.navIcons > a > img {
+    width: 2rem; /* 32px */
+    height: 2rem; /* 32px */
+}
+
+.rg-button {
+    height: 3rem;
+    width: 80%;
+    align-self: center;
+}
+
+/* --- Estilos para el icono de notificación y el badge --- */
+.notification-icon-container {
+    position: relative;
+    display: inline-block;
+     cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 18px;
+    text-align: center;
+    z-index: 2;
+}
+
+
+/* --- Estilos para el contenedor genérico de los dropdowns (notificaciones y chat) --- */
+/* Posicionado ABSOLUTAMENTE respecto al contenedor principal del RightSide (.RightSide) */
+.dropdown-container {
+    position: absolute; /* Posicionamiento absoluto respecto a .RightSide */
+    /* Usa el valor de 'top' que encontraste con las herramientas del navegador */
+    top: 628px; /* <-- MANTÉN TU VALOR AJUSTADO AQUÍ */
+
+    /* Centrado Horizontal con margin: auto */
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    z-index: 1000; /* Asegura que aparezca por encima */
+    background-color: var(--cardColor);
+    border-radius: 1rem; /* Usar 1rem para que coincida con TrendCard */
+    box-shadow: var(--profileShadow);
+    max-height: 80vh;
+    overflow-y: auto;
+    /* overflow-x: hidden; */ /* No ocultar overflow en X por ahora para ver si se desborda */
+
+    /* CONTROL DE ANCHO */
+    /* Usa un max-width fijo. El width: auto y margin: auto lo centrarán. */
+    max-width: 350px; /* <-- AJUSTA ESTE VALOR SI ES NECESARIO */ /* Mantiene el ancho máximo */
+    width: auto; /* Permite que el ancho se determine por el contenido y max-width */
+
+    /* AJUSTE DE PADDING INTERNO */
+    padding: 1rem; /* Usar padding simétrico para simplificar: 16px en todos los lados */
+
+
+    /* Asegúrate de que RightSide no tenga overflow: hidden */
+}
+
+/* ========================================================================== */
+/* --- Estilos para el componente UsersToChatDropdown (copiados) --- */
+/* ========================================================================== */
+
+.UsersToChatDropdown {
+    /* Estilos básicos para el contenedor del dropdown */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Espacio entre los elementos */
+    padding: 0; /* Asegura que UsersToChatDropdown no añade padding propio */
+}
+
+.UsersToChatDropdown h4 {
+     text-align: center;
+     margin-bottom: 0.5rem;
+     color: var(--gray);
+}
+
+.user-list-container {
+     display: flex;
+     flex-direction: column;
+     gap: 0.5rem;
+}
+
+/* Estilos para cada elemento individual de usuario en la lista */
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espacio entre imagen y nombre */
+    /* AJUSTE DE PADDING: Poner padding horizontal en los items, pero con cuidado */
+    /* El padding total disponible dentro del .dropdown-container es el ancho_total - padding_contenedor_izq - padding_contenedor_der */
+    /* Si padding: 1rem en contenedor, hay 16px izq/der. El item necesita caber DENTRO de ese espacio. */
+    /* Si ponemos padding en item, se suma al gap y al ancho del contenido. */
+    /* Vamos a probar un padding horizontal moderado en el item. */
+    padding: 0.5rem; /* <-- Padding de 8px en todos los lados del item */
+    border-radius: 0.5rem;
+    background-color: var(--inputColor);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    /* Asegurarse de que el item no se desborde del contenedor */
+    width: 100%; /* Intentar que ocupe el 100% del espacio disponible (menos padding del contenedor) */
+    box-sizing: border-box; /* Incluir padding y borde en el ancho total */
+}
+
+.user-item:hover {
+    background-color: var(--gray);
+    color: white;
+}
+
+/* Estilos para la imagen de perfil del usuario */
+.user-item .user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* Añadir flex-shrink: 0 para que no se encoja si hay poco espacio */
+    flex-shrink: 0;
+}
+
+/* Estilos para la sección de nombre */
+.user-item .name {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Permite que el nombre ocupe el espacio restante */
+    /* Opcional: Controlar el desbordamiento de texto largo */
+    min-width: 0; /* Permite que el item flex se encoja más allá de su contenido intrínseco */
+    overflow-wrap: break-word; /* Rompe palabras largas */
+    word-break: break-word; /* También ayuda a romper palabras */
+    /* padding-right: 0.5rem; */ /* Si el texto aún se pega al borde */
+}
+
+.user-item .name span:first-child {
+     font-weight: bold;
+}
+
+/* Estilos para el indicador de carga/error/vacío */
+.UsersToChatDropdown > span {
+    text-align: center;
+    color: var(--gray);
+    margin-top: 1rem;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+     /* Ajusta la posición del contenedor del dropdown en pantallas pequeñas */
+    .dropdown-container {
+        top: auto;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+        width: auto;
+        margin: 0; /* Eliminar margin: auto en mobile */
+        transform: none; /* Eliminar transform si no se usa left: 50% */
+        align-self: auto;
+        padding: 1rem; /* Usar padding simétrico en mobile */
+        overflow-x: hidden; /* Mantener hidden en X */
+    }
+
+    .user-item {
+         /* Usar padding simétrico en mobile */
+        padding: 0.5rem;
+    }
+}

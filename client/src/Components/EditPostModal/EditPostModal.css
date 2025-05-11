@@ -1,0 +1,60 @@
+/* En client/src/Components/EditPostModal/EditPostModal.css */
+
+/* Estilos para el formulario dentro del modal */
+.EditPostForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem; /* Añade algo de padding interno */
+}
+
+/* Estilos para el input de descripción */
+.EditPostForm .infoInput {
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    /* Hereda estilos de infoInput global si ya los tienes definidos en App.css */
+}
+
+/* Estilos para la previsualización de la imagen */
+.EditPostForm .previewImage {
+    position: relative;
+    margin-bottom: 1rem; /* Espacio debajo de la imagen */
+}
+
+.EditPostForm .previewImage img {
+    width: 100%;
+    max-height: 250px; /* Altura máxima para la previsualización */
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+/* Estilos para el botón de remover imagen */
+.EditPostForm .remove-image-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: rgba(255, 0, 0, 0.7); /* Fondo rojo semitransparente */
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    z-index: 5; /* Para que esté por encima de la imagen */
+}
+
+.EditPostForm .remove-image-button:hover {
+    background-color: rgba(255, 0, 0, 0.9); /* Rojo más opaco al pasar el ratón */
+}
+
+
+/* Estilos para los inputs de tipo file */
+.EditPostForm input[type="file"] {
+    /* Puedes estilizar esto más a fondo si quieres, pero por defecto funcionará */
+}
+
+/* Estilos para el botón de actualizar */
+.EditPostForm .button.infoButton {
+    align-self: flex-end; /* Alinea el botón a la derecha */
+    margin-top: 1rem; /* Espacio encima del botón */
+    /* Hereda estilos del botón global */
+}

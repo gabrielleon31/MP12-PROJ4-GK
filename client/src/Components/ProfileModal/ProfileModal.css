@@ -1,0 +1,82 @@
+/* En client/src/Components/ProfileModal/ProfileModal.css */
+
+/* Asegura que el contenido del modal pueda hacer scroll si se desborda */
+/* Mantine Modal generalmente maneja esto por defecto, pero si no funciona, puedes añadir reglas aquí */
+/* Por ejemplo, podrías necesitar reglas para el div que contiene el formulario si es el que desborda */
+/* .mantine-Modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px); /* Ejemplo: Altura máxima menos un poco de margen/header/footer del modal */
+/* } */
+
+
+/* Estilo para el contenedor de la previsualización de la imagen */
+/* (El div con className="previewImage" que envuelve a la img) */
+.infoForm .previewImage { /* Usamos .infoForm para dar contexto */
+    position: relative; /* Necesario si el botón de remover es absoluto */
+    margin-bottom: 1rem; /* Espacio debajo de la imagen de previsualización */
+    /* Puedes añadir un borde o fondo si quieres que destaque */
+    /* border: 1px solid var(--hrColor); */
+    /* padding: 0.5rem; */
+    /* background-color: var(--inputColor); */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    overflow: hidden; /* Oculta partes de la imagen si excede el contenedor */
+    display: flex; /* Para controlar el alineamiento si hay múltiples elementos */
+    justify-content: center; /* Centra la imagen horizontalmente */
+    align-items: center; /* Centra la imagen verticalmente */
+}
+
+/* Estilo para la etiqueta <img> de la previsualización de la imagen */
+.infoForm .previewImage img { /* Usamos .infoForm para dar contexto */
+    width: 100%; /* Haz que la imagen ocupe el ancho completo del contenedor */
+    max-height: 250px; /* *** ESTO ES CLAVE: Limita la ALTURA máxima de la imagen de previsualización *** */
+    object-fit: cover; /* Recorta la imagen para que cubra el espacio sin distorsionarse */
+    display: block; /* Ayuda con problemas de espacio extra bajo la imagen */
+    /* Quita cualquier altura o ancho fijo que pueda estar forzando un tamaño grande */
+    height: auto; /* Asegura que la altura se ajusta proporcionalmente al ancho */
+}
+
+/* Estilo para el botón de remover imagen (si lo tienes y es posicionado absolutamente) */
+.infoForm .remove-image-button { /* Usamos .infoForm para dar contexto */
+    position: absolute;
+    top: 0.5rem; /* Posición desde la esquina superior derecha */
+    right: 0.5rem;
+    z-index: 5; /* Asegura que esté por encima de la imagen */
+    /* Añade estilos visuales (fondo, color, bordes, etc.) */
+    background-color: rgba(255, 0, 0, 0.7); /* Ejemplo: Fondo rojo semitransparente */
+    color: white; /* Ejemplo: Color blanco para el icono/texto */
+    border: none;
+    border-radius: 50%; /* Ejemplo: Botón circular */
+    padding: 0.3rem; /* Ejemplo: Padding pequeño */
+    cursor: pointer;
+    display: flex; /* Para centrar contenido si es un icono */
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Ayuda con el centrado vertical */
+    width: 24px; /* Tamaño fijo para el botón */
+    height: 24px; /* Tamaño fijo para el botón */
+    font-size: 1rem; /* Tamaño del texto/icono */
+}
+
+.infoForm .remove-image-button:hover {
+    background-color: rgba(255, 0, 0, 0.9); /* Ejemplo: Rojo más oscuro al pasar el ratón */
+}
+
+/* Asegúrate de que el formulario en sí no tiene un max-height que impida el scroll */
+.infoForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Espacio entre elementos del formulario */
+    padding: 1rem; /* Padding interno */
+    /* Asegúrate de NO tener un max-height fijo aquí que limite el scroll */
+    /* max-height: ...; <-- Evita esto */
+}
+
+
+/* Estilo para el botón de actualizar (para asegurarte de que se vea) */
+.infoForm .infoButton {
+    margin-top: 1.5rem; /* Añade suficiente espacio encima del botón */
+    /* Otros estilos del botón */
+}
+
+/* Si el problema ocurre en el modal de edición de post, haz lo mismo en EditPostModal.css */
+/* Simplemente adapta los selectores CSS si son diferentes (.EditPostForm en lugar de .infoForm) */

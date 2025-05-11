@@ -1,0 +1,138 @@
+/* Este es el archivo client/src/components/ConversationSide/ConversationSide.css */
+
+/* Estilos básicos para la lista de chats */
+.ConversationSide {
+    background-color: var(--cardColor);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-sizing: border-box;
+
+    /* *** ALTURA: Ahora debe crecer en su nuevo padre Flex (ChatPage-left-panel) *** */
+    flex-grow: 1; /* <-- Permite que ConversationSide crezca */
+    height: 0; /* <--- Usar height: 0; cuando flex-grow: 1; en un contexto flex column */
+
+    overflow-y: auto; /* <-- Habilitar scroll */
+
+    /* Asegurar que no hay width fijo aquí que anule el del panel izquierdo en ChatPage.css */
+    /* width: auto; */
+}
+
+.ConversationSide .ChatList {
+    /* Estilos para el contenedor de la lista de chats */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ConversationSide .ChatList > div {
+    /* Estilos para cada elemento de chat en la lista */
+    /* Eliminamos padding, border-radius, background-color, etc. aquí
+       porque ahora el componente Conversation los maneja */
+    cursor: pointer; /* Mantenemos el cursor pointer en el div contenedor */
+}
+
+.ConversationSide .ChatList > div:hover .Conversation {
+    /* Aplicar estilos de hover al componente Conversation dentro del div clickeable */
+    background-color: var(--gray); /* O un color de hover adecuado */
+    color: white; /* Color de texto en hover si el fondo es oscuro */
+}
+
+
+/* Estilos para estado de carga/error/vacío */
+.ConversationSide span {
+    text-align: center;
+    color: var(--gray);
+}
+
+
+/* ========================================================================== */
+/* --- Estilos para el componente Conversation (copiados desde Conversation.css) --- */
+/* Estos estilos se aplicarán a cada div con la clase "Conversation" dentro de la lista */
+/* ========================================================================== */
+
+/* Estilos para cada elemento individual de conversación */
+.Conversation {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espacio entre la imagen y el nombre */
+    padding: 0.75rem 1rem; /* Relleno interno */
+    border-radius: 0.5rem;
+    background-color: var(--inputColor); /* Color de fondo por defecto */
+    /* cursor: pointer; -- ya lo pusimos en el div padre */
+    transition: background-color 0.2s ease; /* Transición suave */
+     position: relative; /* Para posicionar elementos internos como el estado en línea */
+}
+
+/* Estilo para la conversación seleccionada (activa) */
+.Conversation.selected {
+    background: linear-gradient(98.63deg, #6674cc 0%, #b578ff 100%); /* Color de fondo para el seleccionado */
+    color: white; /* Color de texto para el seleccionado */
+    box-shadow: var(--profileShadow); /* O una sombra sutil */
+}
+
+/* Estilos para el contenedor de la imagen (si necesitas flexbox o posicionamiento) */
+.Conversation > div:first-child {
+     display: flex;
+     position: relative; /* Para posicionar el punto de online/offline */
+     align-items: center; /* Centrar verticalmente la imagen y el punto si los usas */
+}
+
+
+/* Estilos para la imagen de perfil del otro usuario */
+.Conversation .followerImg { /* Reutiliza la clase si es adecuada */
+    width: 50px; /* Tamaño de la imagen */
+    height: 50px;
+    border-radius: 50%; /* Redonda */
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+}
+
+/* Estilos para la sección de nombre y estado */
+.Conversation .name { /* Reutiliza la clase si es adecuada */
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */ /* Alinea el texto a la izquierda */
+}
+
+.Conversation .name span:first-child {
+    font-weight: bold; /* Nombre en negrita */
+}
+
+/* Estilos para el separador <hr> */
+.Conversation hr {
+    border: 0.1px solid var(--hrColor); /* Borde delgado */
+    width: 85%; /* Ocupa la mayoría del ancho */
+    align-self: center; /* Centra el separador */
+    margin-top: 0.5rem; /* Espacio encima del separador */
+    margin-bottom: 0.5rem; /* Espacio debajo del separador */
+}
+
+/* --- Estilos opcionales para el indicador de estado en línea/offline --- */
+.online-dot {
+    position: absolute;
+    top: 0px; /* Ajusta según la posición de la imagen */
+    left: 40px; /* Ajusta según la posición de la imagen */
+    width: 10px;
+    height: 10px;
+    background-color: #51e200; /* Verde para online */
+    border-radius: 50%;
+    border: 2px solid white; /* Borde blanco para que resalte */
+}
+
+.offline-dot {
+    position: absolute;
+     top: 0px; /* Ajusta */
+    left: 40px; /* Ajusta */
+    width: 10px;
+    height: 10px;
+    background-color: red; /* Rojo para offline */
+    border-radius: 50%;
+    border: 2px solid white; /* Borde blanco */
+}
+
+/* Estilos para el nombre del usuario en el estado online/offline si lo pones ahí */
+.Conversation .name span:nth-of-type(2) {
+    font-size: 0.7rem; /* Tamaño de texto pequeño */
+}

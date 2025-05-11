@@ -1,0 +1,86 @@
+/* client/src/Pages/AdminPage/AdminPage.css - ACTUALIZADO (Quitados estilos de edición) */
+
+/* Asegúrate de que la clase 'admin-item' coincide con la que usas en AdminPage.js */
+.admin-item {
+    background-color: var(--cardColor); /* Color de fondo para cada item */
+    border: 1px solid var(--hrColor); /* Borde ligero */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    padding: 1rem; /* Espacio interno */
+    margin-bottom: 1rem; /* Espacio entre items */
+    display: flex; /* Usar flexbox para organizar el contenido interno */
+    flex-direction: column; /* Apilar los spans/elementos internos verticalmente */
+    gap: 0.5rem; /* Espacio entre las líneas de información */
+    word-break: break-word; /* Rompe palabras largas si desbordan */
+
+    /* Mantenemos position y z-index si ayudaron con el problema del clic en eliminar */
+     position: relative;
+     z-index: 0; /* Un valor bajo */
+}
+
+/* Opcional: Estilizar los spans dentro del item si quieres negritas, etc. */
+.admin-item span {
+    /* display: block; */
+    /* font-size: 0.9rem; */
+}
+
+/* Estilo para el título "Admin Panel" y las cabeceras de sección */
+.AdminPage h3, .AdminPage h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Estilo para los contenedores de lista (user-list, post-list) */
+.user-list, .post-list {
+    margin-top: 1rem;
+}
+
+
+/* Si quieres que el nombre en los posts sea más prominente */
+.admin-item strong {
+    font-weight: bold;
+}
+
+/* Contenedor para agrupar los botones de acción (Solo eliminar ahora) */
+.admin-item-actions {
+    display: flex; /* Usa flexbox para alinear los botones */
+    /* Quitamos el gap si solo hay un botón, o lo mantenemos si quieres un espacio por si añades otro botón en el futuro */
+    /* gap: 0.5rem; */
+    margin-top: 0.5rem; /* Espacio encima de los botones */
+    align-self: flex-start;
+     z-index: 1; /* Asegura que el contenedor de botones esté por encima del div padre */
+     position: relative;
+}
+
+
+/* Estilo básico para los botones pequeños */
+.admin-item .button.small-button {
+    padding: 0.4rem 0.8rem; /* Padding más pequeño */
+    font-size: 0.8rem; /* Fuente más pequeña */
+    /* Asegúrate de que hereda o defines otros estilos de botón */
+}
+
+/* Estilo específico para el botón de eliminar */
+.admin-item .button.small-button.delete-button {
+    background-color: #f44336; /* Rojo vibrante */
+    color: white; /* Texto blanco */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición suave al pasar el ratón */
+
+    /* Mantenemos position y z-index si ayudaron a que fuera clickeable */
+    position: relative;
+    z-index: 2; /* Asegura que el botón esté por encima del contenedor de acciones y el item padre */
+}
+
+.admin-item .button.small-button.delete-button:hover {
+    background-color: #d32f2f; /* Rojo más oscuro al pasar el ratón */
+}
+
+/* *** QUITAMOS ESTILOS RELACIONADOS CON EL BOTÓN DE EDICIÓN *** */
+/* .admin-item .button.small-button.edit-button { ... } */
+/* .admin-item .button.small-button.edit-button:hover { ... } */
+/* *** FIN QUITAMOS ESTILOS *** */
+
+
+/* Opcional: Estilo para el estado 'activo' o 'foco' del item si lo modificaste antes */
+/* .admin-item:active, .admin-item:focus { ... } */

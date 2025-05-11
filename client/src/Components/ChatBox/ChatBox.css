@@ -1,0 +1,184 @@
+/* client/src/components/ChatBox/ChatBox.css */
+
+.ChatBox {
+    background-color: var(--cardColor);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column; /* Apila header, body, footer */
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    /* *** ALTURA: Ahora debe crecer en su nuevo padre Flex (ChatPage-right-panel) *** */
+    /* Usar height: 0; y flex-grow: 1; en el contenedor FLEX */
+     height: 0; /* <--- Intentar height: 0; */
+     flex-grow: 1; /* <--- Y flex-grow: 1; para que el ChatBox crezca en el ChatPage-right-panel */
+
+    width: auto; /* Asegurarse de que el ancho se ajusta */
+    /* min-height: 0; */ /* A veces ayuda en Flexbox con overflow */
+}
+
+.ChatBox.empty-chat {
+    flex-grow: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--gray);
+    /* Asegurar que no tiene altura fija aquí */
+    height: auto;
+}
+
+.ChatBox .chat-body {
+    flex-grow: 1; /* Permite que el cuerpo del chat (mensajes) crezca */
+    overflow-y: auto; /* Habilitar scroll */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    /* gap: 0.5rem; */ /* Espacio entre mensajes */
+}
+
+
+/* --- Header del Chat --- */
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    height: auto; /* Altura automática */
+    flex-shrink: 0; /* No permitir que se encoja */
+}
+
+.chat-header .other-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.chat-header .other-user-info .name {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header .other-user-info .name span:first-child {
+    font-weight: bold;
+}
+
+
+/* --- Cuerpo del Chat (Mensajes) --- */
+.ChatBox .chat-body {
+    flex-grow: 1; /* <-- ¡CLAVE! Crece para ocupar el espacio restante */
+    overflow-y: auto; /* <-- ¡CLAVE! Habilitar scroll vertical */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    /* gap: 0.5rem; */
+    box-sizing: border-box;
+    /* *** Asegurarse de que no tiene una altura fija *** */
+     height: auto; /* Altura automática basada en el contenido, limitada por flex-grow en el padre (.ChatBox) */
+     min-height: 0; /* Ayuda en Flexbox con overflow */
+}
+
+.chat-body span { /* Estilos para el texto "Loading Messages..." o "Start the conversation!" */
+     text-align: center;
+     color: var(--gray);
+     margin-top: 1rem;
+}
+
+
+/* Estilos básicos para cada mensaje individual */
+/* Estos se sobreescribirán si creas un componente Message separado */
+.chat-body > div {
+    max-width: 80%; /* Mensajes no ocupan todo el ancho */
+    /* align-self lo definimos inline en el JSX: flex-start para otros, flex-end para ti */
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.8rem;
+    word-break: break-word; /* Evita desbordamiento de palabras largas */
+    /* background-color y color del texto se definen inline en el JSX por ahora */
+}
+
+/* Estilos para el mensaje del usuario logueado */
+/* .chat-body .my-message {
+    background-color: #dcf8c6; // Color típico de chat enviado
+    color: #000;
+    align-self: flex-end; // Alineado a la derecha
+} */
+
+/* Estilos para el mensaje del otro usuario */
+/* .chat-body .other-message {
+    background-color: #eee; // Color típico de chat recibido
+    color: #000;
+    align-self: flex-start; // Alineado a la izquierda
+} */
+
+/* Estilos para la hora/fecha del mensaje si la añades */
+/* .chat-body .message-time {
+    display: block; // En una nueva línea
+    font-size: 0.7rem;
+    color: #666;
+    text-align: right; // O left, dependiendo de la alineación del mensaje
+    margin-top: 0.2rem; // Espacio entre texto y hora
+} */
+
+
+/* --- Footer del Chat (Entrada de Mensaje) --- */
+.chat-footer {
+    margin-top: 0.5rem;
+    height: auto; /* Altura automática */
+    flex-shrink: 0; /* No permitir que se encoja */
+}
+
+.chat-footer .message-input-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre input y botón */
+}
+
+.chat-footer .message-input-form input[type="text"] {
+    /* Estilos para el input de texto del mensaje */
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: var(--inputColor);
+    font-size: 1rem;
+    outline: none;
+}
+
+.chat-footer .message-input-form button {
+    /* Estilos para el botón de enviar */
+    padding: 0.75rem 1.5rem; /* Ajusta el padding */
+    /* Ya usas la clase 'button' globalmente, así que heredará esos estilos */
+    /* Puedes añadir estilos específicos si quieres, como un icono en lugar de texto */
+}
+
+/* Opcional: Estilos para el botón de adjunto si lo añades */
+/* .chat-footer .message-input-form .option {
+     // Estilos para el contenedor del icono de adjunto
+     padding: 0.5rem;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+} */
+
+
+/* Responsive Design para ChatBox */
+@media (max-width: 768px) {
+    .ChatBox {
+        height: calc(100vh - 1rem - 0.5rem); /* Ajusta la altura para mobile, considerando padding */
+        padding: 0.5rem;
+    }
+
+    .chat-footer .message-input-form {
+        flex-direction: column; /* Apila input y botón en pantallas pequeñas */
+        gap: 0.5rem;
+    }
+
+    .chat-footer .message-input-form input[type="text"] {
+        width: 100%; /* Input ocupa todo el ancho apilado */
+    }
+
+    .chat-footer .message-input-form button {
+        width: 100%; /* Botón ocupa todo el ancho apilado */
+    }
+}

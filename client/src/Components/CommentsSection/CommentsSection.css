@@ -1,0 +1,78 @@
+.CommentsSection {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--hrColor); /* Línea separadora */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.CommentsSection h4 {
+    margin-bottom: 0.5rem;
+    color: var(--gray);
+}
+
+.commentList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 150px; /* Limita la altura y añade scroll si hay muchos comentarios */
+    overflow-y: auto;
+    padding-right: 10px; /* Espacio para la scrollbar */
+}
+
+.comment {
+    background-color: var(--inputColor); /* Fondo sutil para cada comentario */
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-author {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: var(--black); /* Color más oscuro para el autor */
+}
+
+.comment-text {
+    font-size: 0.9rem;
+    color: var(--gray); /* Color para el texto del comentario */
+    margin-top: 0.2rem;
+    word-break: break-word; /* Evita que el texto largo desborde */
+}
+
+/* Si añades fecha */
+/*
+.comment-date {
+    font-size: 0.75rem;
+    color: var(--gray);
+    align-self: flex-end;
+}
+*/
+
+.addCommentForm {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.addCommentForm input[type="text"] {
+    flex-grow: 1; /* El input ocupa el espacio restante */
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--hrColor);
+    background-color: var(--inputColor);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.addCommentForm input[type="text"]:focus {
+     border-color: var(--purplePain); /* Borde al enfocar */
+}
+
+.addCommentForm button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    /* Hereda estilos del botón global, pero puedes ajustarlo */
+}

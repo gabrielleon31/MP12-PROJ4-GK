@@ -1,0 +1,72 @@
+/* client/src/components/Message/Message.css - Estilos para nombre ENCIMA del globo */
+
+/* Contenedor principal del mensaje (nombre + globo) */
+.message-container {
+    display: flex;
+    flex-direction: column; /* Nombre, foto (opcional), y globo apilados verticalmente */
+    margin-bottom: 0.1rem; /* Espacio entre contenedores de mensaje */
+    /* width: 100%; */ /* Ocupar todo el ancho del contenedor padre para la alineación */
+}
+
+/* Contenedor para mis mensajes (alineación derecha) */
+.my-message-container {
+    align-items: flex-end; /* Alinear los elementos (nombre, globo) a la derecha */
+}
+
+/* Contenedor para mensajes de otros (alineación izquierda) */
+.other-message-container {
+    align-items: flex-start; /* Alinear los elementos (nombre, globo) a la izquierda */
+}
+
+/* Estilos para el nombre (dentro del contenedor, fuera del globo) */
+.message-container .sender-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.1rem; /* Espacio pequeño entre el nombre y el globo */
+    /* Asegúrate de que no tiene estilos que lo alineen independientemente */
+}
+
+/* Estilos para el globo del mensaje */
+.message-bubble {
+    padding: 0.5rem 0.8rem; /* Relleno dentro del globo */
+    border-radius: 1rem; /* Bordes redondeados */
+    max-width: 75%; /* *** AJUSTAR EL ANCHO MÁXIMO AQUÍ *** */
+    word-break: break-word; /* Romper palabras largas */
+    display: flex;
+    flex-direction: column; /* Texto y timestamp apilados */
+}
+
+/* Estilos para el globo de mis mensajes */
+.my-bubble {
+    background-color: #dcf8c6; /* Color de fondo para mis mensajes */
+    /* align-self: flex-end; */ /* Si no usas align-items en el contenedor */
+}
+
+/* Estilos para el globo de mensajes de otros */
+.other-bubble {
+    background-color: #e9e9eb; /* Color de fondo para mensajes de otros */
+    /* align-self: flex-start; */ /* Si no usas align-items en el contenedor */
+}
+
+/* Estilos para el texto del mensaje dentro del globo */
+.message-bubble .message-text {
+    margin: 0; /* Eliminar margen por defecto */
+    /* white-space: pre-wrap; */ /* Opcional */
+}
+
+/* Estilos para el timestamp (dentro del globo) */
+.message-bubble .message-time {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 0.3rem;
+    /* Alinear el timestamp dentro del globo */
+    align-self: flex-end; /* Alinear a la derecha dentro del globo */
+    /* o text-align: right; si no usas flex */
+}
+
+/* Opcional: Estilos para la foto de perfil al lado del globo (si la implementas) */
+/* .message-avatar { ... } */
+/* Necesitarías ajustar el display y la dirección de flexbox en .message-container para que la foto y el globo estén lado a lado */
+/* Por ejemplo: display: flex; flex-direction: row; align-items: flex-start; */
+/* Y luego estilos para empujar el globo y el nombre a la derecha o izquierda si la foto está presente */

@@ -1,0 +1,179 @@
+/* client/src/pages/ChatPage/ChatPage.css - AJUSTADO PARA NUEVA ESTRUCTURA */
+
+/* Estilos para la página principal de chat */
+.ChatPage {
+    display: flex;
+    flex-direction: column; /* Si hay header/footer de página, apilarlos */
+    height: 100vh; /* Ocupa la altura completa de la ventana */
+    overflow: hidden; /* Oculta el scroll principal */
+    padding: 1rem;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* *** CONTENEDOR PRINCIPAL DEL ÁREA DE CHAT (NUEVO) *** */
+/* Este div ahora es el Flexbox de 2 columnas */
+.ChatPage-container { /* Usamos el nombre de la Opción 1 en JS */
+    flex-grow: 1; /* Ocupa todo el espacio vertical restante en ChatPage */
+    display: flex; /* <-- USAR FLEXBOX para las 2 columnas */
+    flex-direction: row; /* Pone los hijos (paneles) uno al lado del otro */
+    gap: 1rem; /* Espacio entre las columnas */
+    width: 100%; /* Ocupa el ancho completo del padre */
+    max-width: 1200px; /* Opcional: Ancho máximo */
+    margin: 0 auto; /* Opcional: Centrar */
+    /* Altura: Debe ocupar el 100% de la altura disponible en el padre Flex (.ChatPage) */
+    height: 100%; /* <-- Debe ocupar el 100% de la altura restante */
+    /* min-height: 0; */ /* A veces ayuda en Flexbox con overflow */
+}
+
+
+/* *** ESTILOS PARA EL PANEL IZQUIERDO (Header + Lista de Chats) *** */
+.ChatPage-left-panel { /* Usamos el nombre del div que agrupa en JS */
+    display: flex;
+    flex-direction: column; /* Apila el header y la lista de chats verticalmente */
+    gap: 1rem; /* Espacio entre el header y la lista de chats */
+
+    /* Define el ancho de este panel (la columna izquierda) */
+    width: 300px; /* Ejemplo de ancho fijo para la barra lateral */
+    flex-shrink: 0; /* No permitir que se encoja */
+
+    /* Altura: Debe ocupar el 100% de la altura del ChatPage-container */
+    height: 100%; /* <-- Ocupa el 100% */
+    box-sizing: border-box;
+    /* background-color: lightgreen; */ /* Opcional: Depurar el área del panel izquierdo */
+    /* min-height: 0; */ /* A veces ayuda */
+}
+
+
+/* Estilos para el header de la página de chat (dentro del panel izquierdo) */
+.chat-page-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     /* margin-bottom: 1rem; */ /* El gap en ChatPage-left-panel ya maneja el espacio */
+     padding: 1rem; /* Añadir padding interno si no lo tiene ConversationSide */
+     background-color: var(--cardColor); /* Fondo similar a ConversationSide */
+     border-radius: 1rem; /* Bordes redondeados */
+     box-sizing: border-box; /* Incluye padding y border en el tamaño */
+
+     /* Altura: Debe tener altura automática y no encojerse */
+     height: auto;
+     flex-shrink: 0;
+
+     width: 100%; /* Ocupa el ancho completo del panel izquierdo */
+
+     /* z-index si es necesario, pero ahora está dentro del flujo normal */
+     /* position: relative; */
+     /* z-index: 10; */
+}
+
+.chat-page-header h2 {
+    margin: 0;
+}
+
+/* Estilos para el botón Go Home (hereda de .button y añade específicos si quieres) */
+.button.go-home-button {
+    /* Estilos heredados o específicos */
+}
+
+
+/* *** ESTILOS PARA EL PANEL DERECHO (Caja de Chat) *** */
+.ChatPage-right-panel { /* Usamos el nombre del div que agrupa en JS */
+    display: flex;
+    flex-direction: column; /* La caja de chat dentro es una columna (header, body, footer) */
+
+    flex-grow: 1; /* <-- Permite que este panel ocupe el espacio horizontal restante */
+    width: auto; /* Asegura que el ancho se ajusta */
+
+    /* Altura: Debe ocupar el 100% de la altura del ChatPage-container */
+    height: 100%; /* <-- Ocupa el 100% */
+    box-sizing: border-box;
+    /* background-color: lightblue; */ /* Opcional: Depurar el área del panel derecho */
+    /* min-height: 0; */ /* A veces ayuda */
+}
+
+/* --- Estilos para ConversationSide y ChatBox dentro de los Paneles --- */
+
+/* ConversationSide (Ahora dentro de ChatPage-left-panel) */
+.ConversationSide {
+    /* Los estilos básicos (background, border-radius, padding, display, flex-direction, gap, overflow-y)
+       deberían seguir en ConversationSide.css */
+    /* PERO SU ALTURA DEBE SER GESTIONADA POR EL PADRE FLEX (ChatPage-left-panel) */
+    flex-grow: 1; /* <-- Permite que la lista de chats crezca para ocupar el espacio debajo del header */
+    height: 0; /* <--- Usar height: 0; aquí cuando flex-grow: 1; en un contexto flex column */
+    box-sizing: border-box;
+    overflow-y: auto; /* <-- Habilitar scroll */
+    /* Asegurarse de que no hay width fijo aquí que anule el del panel izquierdo */
+    /* width: auto; */
+}
+
+/* ChatBox (Ahora dentro de ChatPage-right-panel) */
+.ChatBox {
+    /* Los estilos básicos (background, border-radius, padding, display, flex-direction, justify-content)
+       deberían seguir en ChatBox.css */
+    /* SU ALTURA DEBE SER GESTIONADA POR EL PADRE FLEX (ChatPage-right-panel) */
+    flex-grow: 1; /* <-- Permite que la caja de chat crezca en el panel derecho */
+    height: 0; /* <--- Usar height: 0; aquí cuando flex-grow: 1; en un contexto flex column */
+    box-sizing: border-box;
+    /* Asegurarse de que no hay width fijo aquí que anule el del panel derecho */
+    /* width: auto; */
+}
+
+
+/* Estilos para el cuerpo de los mensajes dentro de ChatBox */
+.ChatBox .chat-body {
+    /* Los estilos (flex-grow: 1, overflow-y: auto, padding, display, flex-direction)
+       deben seguir en ChatBox.css */
+    /* Estos ya deberían estar correctos si ChatBox es flex column y tiene height */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: auto; /* Altura automática limitada por flex-grow en el padre */
+    min-height: 0; /* Ayuda con el overflow */
+}
+
+/* Estilos para el footer del chat */
+.chat-footer {
+    /* Los estilos (margin-top, flex-shrink) deben seguir en ChatBox.css */
+    height: auto;
+    flex-shrink: 0;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ChatPage {
+        padding: 0.5rem;
+    }
+    /* En mobile, apilamos los paneles */
+    .ChatPage-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        height: auto; /* Altura automática en mobile */
+    }
+
+    /* Los paneles en mobile ocupan todo el ancho y tienen altura automática */
+    .ChatPage-left-panel,
+    .ChatPage-right-panel {
+        width: 100%;
+        height: auto;
+        /* Puedes definir un max-height para la lista de chats si es necesario */
+        /* max-height: 50vh; */
+    }
+
+    /* En mobile, la lista de chats crece para ocupar el espacio */
+    .ConversationSide {
+        flex-grow: 1;
+        height: 0; /* O 100% si quieres que ocupe toda la altura del panel */
+        max-height: 50vh; /* Ejemplo: Limita la altura de la lista de chats en mobile */
+    }
+
+    /* En mobile, la caja de chat crece para ocupar el espacio */
+    .ChatBox {
+        flex-grow: 1;
+        height: 0; /* O 100% si quieres que ocupe toda la altura del panel */
+    }
+}
