@@ -1,65 +1,97 @@
-// Este es el archivo client/src/Pages/SinglePostPage/SinglePostPage.js
+// client/src/Pages/SinglePostPage/SinglePostPage.js - ACTUALIZADO con clases CSS y manejo de carga/error
 import React, { useEffect } from 'react';
 import Post from '../../Components/Post/Post';
 import { useDispatch, useSelector } from 'react-redux';
+// Asegúrate de que la acción para obtener un solo post esté importada
 import { getPostAction } from '../../actions/PostAction';
 import { useParams, useNavigate } from 'react-router-dom';
-import './SinglePostPage.css'; // Asegúrate de que tienes este archivo CSS
-
-// No importar ProfileSide ni RightSide si no los vas a usar
-// import RightSide from '../../Components/RightSide/RightSide';
-// import ProfileSide from '../../Components/profileSide/ProfileSide';
+import './SinglePostPage.css'; // Asegúrate de que tienes este archivo CSS importado
 
 
 const SinglePostPage = () => {
-  const { postId } = useParams();
+  const { postId } = useParams(); // Obtiene el ID del post de la URL
   const dispatch = useDispatch();
+  // Obtiene el estado de Redux para el post individual
   const { post, gettingPost, gettingPostError } = useSelector((state) => state.postReducer);
-  const { user } = useSelector((state) => state.authReducer.authData) || {}; // Usuario logueado (manejar null)
+  // Obtiene el usuario logueado (para pasarlo al componente Post si es necesario)
+  const { user } = useSelector((state) => state.authReducer.authData) || {};
 
 
   const navigate = useNavigate(); // Hook para navegar
 
-
+  // --- useEffect para CARGAR el post individual ---
   useEffect(() => {
     console.log(`SinglePostPage useEffect. postId from URL: ${postId}`);
     if (postId) {
       console.log(`SinglePostPage: Fetching post with ID: ${postId}`);
       dispatch(getPostAction(postId));
     }
+     // Dependencias: Aseguramos que se ejecute si cambia el postId o si dispatch cambia (aunque dispatch es estable)
   }, [postId, dispatch]);
 
 
+  // --- Handler para el botón "Go Back" ---
   const handleGoBack = () => {
-     navigate(-1); // Navega un paso atrás
+     console.log("SinglePostPage: Go Back button clicked, navigating -1");
+     navigate(-1); // Navega un paso atrás en el historial
   };
 
 
+  // --- Renderizado condicional basado en estado de carga y error ---
+
   if (gettingPost) {
-    return <div className="SinglePostPage">Loading post...</div>;
+    // Muestra un mensaje de carga mientras se obtiene el post
+    return (
+      <div className="SinglePostPage" style={{ textAlign: 'center', marginTop: '2rem' }}>
+        Loading post...
+      </div>
+    );
   }
 
   if (gettingPostError) {
-     console.error("SinglePostPage: Error loading post:", gettingPostError);
-    return <div className="SinglePostPage">Error loading post.</div>;
+    // Muestra un mensaje de error si falla la carga
+    console.error("SinglePostPage: Error loading post:", gettingPostError);
+    return (
+      <div className="SinglePostPage" style={{ textAlign: 'center', marginTop: '2rem', color: 'red' }}>
+        Error loading post.
+      </div>
+    );
   }
 
   if (!post) {
-    return <div className="SinglePostPage">Post not found.</div>;
+    // Muestra un mensaje si el post no se encuentra (ej. ID inválido o eliminado)
+    return (
+        <div className="SinglePostPage" style={{ textAlign: 'center', marginTop: '2rem' }}>
+          Post not found.
+        </div>
+      );
   }
 
+  // --- Si el post se cargó exitosamente, renderizar el contenido ---
   return (
-    <div className="SinglePostPage" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-       <button onClick={handleGoBack} style={{ marginBottom: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
+    // Contenedor principal de la página con la clase CSS
+    <div className="SinglePostPage">
+       {/* Botón "Go Back" con la clase CSS */}
+       {/* Añadimos padding al contenedor principal para que el botón no se pegue al borde */}
+       <button onClick={handleGoBack} className="go-back-button">
            Go Back
        </button>
 
-        <div className="SinglePostPage-Content" style={{ maxWidth: '50rem', width: '100%' }}>
-           <Post key={post._id} data={post} currentUser={user} />
+       {/* Contenido principal del post con la clase CSS */}
+        <div className="SinglePostPage-Content">
+            {/* El componente Post muestra el post individual */}
+            {/* Le pasamos los datos del post y el usuario logueado si los necesita para likes/interacción */}
+            <Post data={post} user={user} />
 
-           {/* Aquí podrías añadir la sección de comentarios si la tienes */}
-           {/* <CommentsSection postId={post._id} /> */}
+            {/* Si tienes una sección de comentarios implementada y quieres mostrarla aquí, descomenta */}
+            {/* {post && <CommentsSection postId={post._id} />} */}
         </div>
+
+         {/* Puedes añadir ProfileSide o RightSide aquí si quieres un layout similar a Home/Profile */}
+         {/* Por ahora, los quito para simplificar esta página si solo muestra el post */}
+         {/* <ProfileSide /> */}
+         {/* <RightSide /> */}
+
     </div>
   );
 };
